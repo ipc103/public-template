@@ -23,3 +23,4 @@ jobs:
         uses: AndreasAugustin/actions-template-sync@v2
         with:
           source_repo_path: ipc103/public-template
+          github_token: ${{ secrets.GITHUB_TOKEN }}
