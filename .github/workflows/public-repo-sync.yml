@@ -21,6 +21,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: parent
       - name: Sync
+        env: 
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "publicreposync@fakeemail.com"
           git config --global user.name "Public Repo Sync"
