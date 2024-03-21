@@ -22,9 +22,15 @@ jobs:
           path: parent
       - name: Sync
         run: |
+          git config --global user.email "publicreposync@fakeemail.com"
+          git config --global user.name "Public Repo Sync"
           cd parent
+          cat README.md
           COMMIT_ID=$(git rev-parse --short HEAD)
+          rm -rf .git
           cd ../repo
+          pwd
+          cat README.md
           git checkout -b sync-from-parent-$COMMIT_ID
           cp -rf ../parent/. .
           git add .
