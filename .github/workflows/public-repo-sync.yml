@@ -1,0 +1,33 @@
+on:
+  workflow_dispatch:
+jobs:
+  sync-from-initial-repo:
+    runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          path: repo
+      - name: Checkout Parent
+        uses: actions/checkout@v4
+        with:
+          repository: ipc103/public-template
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: parent
+      - name: Sync
+        run: |
+          cd parent
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          cd ../repo
+          git checkout -b sync-from-parent-$COMMIT_ID
+          cp -rf ../parent/. .
+          git add .
+          git commit -m "Sync from parent"
+          git push -u origin sync-from-parent-$COMMIT_ID
+          gh pr create --title "[Repo Sync] Sync from parent" --body "Sync from parent repo" --base main --head sync-from-parent-$COMMIT_ID
